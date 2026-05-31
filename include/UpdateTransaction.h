@@ -31,8 +31,9 @@ class IndexStore;
  *   - addDocument / removeDocument могут вернуть DuplicateDocumentId, DocumentNotFound.
  *   - commit() может вернуть TransactionNotActive (если транзакция уже завершена).
  */
-class UpdateTransaction {
-public:
+class UpdateTransaction
+{
+  public:
     /**
      * @brief Конструктор, вызывается только из IndexStore::beginTransaction().
      * @param store Ссылка на владельца индекса (хранится указатель).
@@ -95,10 +96,13 @@ public:
     /**
      * @brief Проверяет, активна ли транзакция (ещё не закоммичена и не откачена).
      */
-    bool isActive() const { return active_; }
+    bool isActive() const
+    {
+        return active_;
+    }
 
-private:
-    IndexStore* store_;       ///< Указатель на IndexStore (не владеет, не может быть nullptr)
-    bool active_;             ///< true, пока транзакция жива и не завершена
-    bool committed_;          ///< true, если commit() уже был вызван успешно
+  private:
+    IndexStore* store_; ///< Указатель на IndexStore (не владеет, не может быть nullptr)
+    bool active_;       ///< true, пока транзакция жива и не завершена
+    bool committed_;    ///< true, если commit() уже был вызван успешно
 };

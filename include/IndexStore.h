@@ -3,8 +3,8 @@
 // Подключаем заголовки:
 // - InvertedIndex.h — прямой и инвертированный индекс (основная логика)
 // - Error.h — перечисление Error и шаблон Result = std::expected<T, Error>
-#include "InvertedIndex.h"
 #include "Error.h"
+#include "InvertedIndex.h"
 
 // Для std::unique_ptr и управления владением
 #include <memory>
@@ -28,8 +28,9 @@ class UpdateTransaction;
  *   - currentIndex_ — основная версия индекса (всегда валиден);
  *   - stagingIndex_ — временная копия для активной транзакции (nullptr, если транзакции нет).
  */
-class IndexStore {
-public:
+class IndexStore
+{
+  public:
     // Конструктор по умолчанию: создаёт пустой индекс через std::make_unique.
     IndexStore() = default;
 
@@ -44,8 +45,9 @@ public:
 
     /// Конструктор перемещения: забирает владение индексами у other.
     IndexStore(IndexStore&& other) noexcept
-        : currentIndex_(std::move(other.currentIndex_))   // currentIndex_ other становится nullptr
-        , stagingIndex_(std::move(other.stagingIndex_))
+        : currentIndex_(std::move(other.currentIndex_)) // currentIndex_ other становится nullptr
+          ,
+          stagingIndex_(std::move(other.stagingIndex_))
     {
         // После перемещения other должен оставаться в рабочем состоянии,
         // чтобы вызов size() или contains() не приводил к UB.
@@ -54,8 +56,10 @@ public:
     }
 
     /// Оператор перемещающего присваивания.
-    IndexStore& operator=(IndexStore&& other) noexcept {
-        if (this != &other) {                // защита от самоприсваивания
+    IndexStore& operator=(IndexStore&& other) noexcept
+    {
+        if (this != &other)
+        { // защита от самоприсваивания
             // Освобождаем текущие ресурсы и забираем чужие
             currentIndex_ = std::move(other.currentIndex_);
             stagingIndex_ = std::move(other.stagingIndex_);
@@ -87,14 +91,16 @@ public:
     // --- Простые наблюдатели (noexcept, защищены от nullptr) ---
 
     /// Общее количество документов в индексе.
-    std::size_t size() const noexcept {
+    std::size_t size() const noexcept
+    {
         // currentIndex_ может быть nullptr только после перемещения,
         // но мы гарантируем, что moved-from объект имеет валидный пустой индекс.
         return currentIndex_ ? currentIndex_->size() : 0;
     }
 
     /// Проверяет, существует ли документ с данным id.
-    bool contains(Document::Id id) const {
+    bool contains(Document::Id id) const
+    {
         return currentIndex_ ? currentIndex_->contains(id) : false;
     }
 
@@ -107,7 +113,7 @@ public:
      */
     Result<UpdateTransaction> beginTransaction();
 
-private:
+  private:
     // Дружественный класс UpdateTransaction получает доступ к приватным методам
     // commitTransaction() и rollbackTransaction(), а также к полю stagingIndex_.
     friend class UpdateTransaction;
