@@ -12,7 +12,7 @@ Result<void> IndexStore::addDocument(Document doc)
     {
 
         currentIndex_->addDocument(std::move(doc));
-        return {}; 
+        return {};
     }
     catch (...)
     {
@@ -20,8 +20,6 @@ Result<void> IndexStore::addDocument(Document doc)
         return std::unexpected(Error::Unknown);
     }
 }
-
-
 
 Result<void> IndexStore::removeDocument(Document::Id id)
 {
@@ -34,7 +32,7 @@ Result<void> IndexStore::removeDocument(Document::Id id)
     return removed ? Result<void>{} : std::unexpected(Error::DocumentNotFound);
 }
 
-<SearchResult>> IndexStore::search(const std::string& word) const
+< SearchResult >> IndexStore::search(const std::string& word) const
 {
     std::string normalized = DocumentBuilder::normalize(word);
     if (normalized.empty())
@@ -44,7 +42,6 @@ Result<void> IndexStore::removeDocument(Document::Id id)
 
     return currentIndex_->search(normalized);
 }
-
 
 Result<std::size_t> IndexStore::wordCount(Document::Id id, const std::string& word) const
 {
@@ -65,7 +62,6 @@ Result<std::optional<std::reference_wrapper<const Document>>> IndexStore::getDoc
     }
     return opt;
 }
-
 
 Result<UpdateTransaction> IndexStore::beginTransaction()
 {
@@ -88,7 +84,6 @@ void IndexStore::commitTransaction()
         stagingIndex_.reset();
     }
 }
-
 
 void IndexStore::rollbackTransaction()
 {
