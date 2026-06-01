@@ -1,14 +1,7 @@
 #include "UpdateTransaction.h"
 #include "IndexStore.h"
 
-UpdateTransaction::UpdateTransaction(IndexStore& store)
-    : store_(&store)
-      ,
-      active_(true)
-      ,
-      committed_(false)
-{
-}
+UpdateTransaction::UpdateTransaction(IndexStore& store) : store_(&store), active_(true), committed_(false) {}
 
 UpdateTransaction::~UpdateTransaction()
 {
